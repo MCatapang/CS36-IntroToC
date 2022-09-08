@@ -35,7 +35,8 @@ int main(void) {
     float 
         hours_worked[5], hourly_rate[5], 
         amount_paid[5], amount_taxed[5], 
-        amount_final[5];
+        amount_final[5], overtime_pay[5],
+        base_pay[5];
     int should_print[5] = {0,0,0,0,0};
 
     for(int i=0; i<5; i++)
@@ -87,16 +88,22 @@ int main(void) {
             /* Overtime Logic */
             if(hours_worked[i] > 40) 
             {
-            amount_paid[i] = hourly_rate[i] * 40;
-            float hourly_otime = hourly_rate[i]*1.5;
-            amount_paid[i] += (hourly_otime) * (hours_worked[i]-40);
+                amount_paid[i] = hourly_rate[i] * 40;
+                base_pay[i] = amount_paid[i];
+                float hourly_otime = hourly_rate[i]*1.5;
+                overtime_pay[i] = (hourly_otime) * (hours_worked[i]-40);
+                amount_paid[i] += overtime_pay[i];
             } 
             else
             {
                 amount_paid[i] = hourly_rate[i] * hours_worked[i];
+                base_pay[i] = amount_paid[i];
+                overtime_pay[i] = 0.00;
             }
 
-            /* Taxed Amount, and Take-Home Amount */
+            /* Taxed Amount, and Take-Home Amount 
+            
+            */
             amount_taxed[i] = amount_paid[i] * 0.20;
             amount_final[i] = amount_paid[i] - amount_taxed[i];
         }
@@ -107,11 +114,13 @@ int main(void) {
         if(should_print[i] == 1)
         {
             printf("\n\nPay to: %s", name[i]);
-            printf("\nHourly rate: %.2f", hourly_rate[i]);
             printf("\nHours worked: %.1f", hours_worked[i]);
-            printf("\nAmount paid: %.2f", amount_paid[i]);
+            printf("\nHourly rate: $%.2f", hourly_rate[i]);
+            printf("\nGross pay: $%.2f", amount_paid[i]);
+            printf("\nBase pay: $%.2f", base_pay[i]);
+            printf("\nOvertime pay: $%.2f", overtime_pay[i]);
             printf("\nTaxes paid: %.2f", amount_taxed[i]);
-            printf("\nTake home: %.2f", amount_final[i]);
+            printf("\nNet pay: %.2f", amount_final[i]);
         }
     }
 }
